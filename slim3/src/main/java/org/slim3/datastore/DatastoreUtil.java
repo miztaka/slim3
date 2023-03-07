@@ -29,7 +29,7 @@ import org.slim3.util.ClassUtil;
 import org.slim3.util.Cleanable;
 import org.slim3.util.Cleaner;
 import org.slim3.util.FutureUtil;
-
+import com.google.appengine.api.NamespaceManager;
 import com.google.appengine.api.datastore.AsyncDatastoreService;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.Entity;
@@ -148,7 +148,12 @@ public final class DatastoreUtil {
             throw new NullPointerException(
                 "The kind parameter must not be null.");
         }
-        Iterator<Key> keys = keysCache.get(kind);
+        String ns = NamespaceManager.get();
+        if (ns == null) {
+            ns = "";
+        }
+        String cacheKey = "!"+ns+":"+kind;
+        Iterator<Key> keys = keysCache.get(cacheKey);
         if (keys != null && keys.hasNext()) {
             return keys.next();
         }
@@ -156,7 +161,7 @@ public final class DatastoreUtil {
             FutureUtil
                 .getQuietly(allocateIdsAsync(ds, kind, KEY_CACHE_SIZE))
                 .iterator();
-        keysCache.put(kind, keys);
+        keysCache.put(cacheKey, keys);
         return keys.next();
     }
 

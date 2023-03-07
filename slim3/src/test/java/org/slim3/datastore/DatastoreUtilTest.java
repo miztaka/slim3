@@ -116,17 +116,17 @@ public class DatastoreUtilTest extends AppEngineTestCase {
         DatastoreUtil.keysCache.remove("Hoge");
         Key key = DatastoreUtil.allocateId(ds, "Hoge");
         assertThat(key, is(notNullValue()));
-        Iterator<Key> keys = DatastoreUtil.keysCache.get("Hoge");
+        Iterator<Key> keys = DatastoreUtil.keysCache.get("!:Hoge");
         assertThat(keys, is(notNullValue()));
         for (int i = 0; i < 49; i++) {
             DatastoreUtil.allocateId(ds, "Hoge");
             assertThat(
-                DatastoreUtil.keysCache.get("Hoge"),
+                DatastoreUtil.keysCache.get("!:Hoge"),
                 is(sameInstance(keys)));
         }
         DatastoreUtil.allocateId(ds, "Hoge");
         assertThat(
-            DatastoreUtil.keysCache.get("Hoge"),
+            DatastoreUtil.keysCache.get("!:Hoge"),
             is(not(sameInstance(keys))));
     }
 
