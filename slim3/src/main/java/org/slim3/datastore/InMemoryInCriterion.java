@@ -15,6 +15,7 @@
  */
 package org.slim3.datastore;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -61,8 +62,16 @@ public class InMemoryInCriterion extends AbstractCriterion implements
     public boolean accept(Object model) {
         Object v = convertValueForDatastore(attributeMeta.getValue(model));
         for (Object o : value) {
-            if (compareValue(v, o) == 0) {
-                return true;
+            if (v instanceof Collection<?>) {
+                for (Object v2: (Collection<?>)v) {
+                    if (compareValue(v2, o) == 0) {
+                        return true;
+                    }
+                }
+            } else {
+                if (compareValue(v, o) == 0) {
+                    return true;
+                }
             }
         }
         return false;
