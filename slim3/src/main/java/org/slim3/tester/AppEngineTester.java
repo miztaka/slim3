@@ -494,6 +494,7 @@ public class AppEngineTester implements Delegate<Environment> {
             datastoreKeys.clear();
         }
         mailMessages.clear();
+        DatastoreUtil.clearKeysCache();
         NamespaceManager.set(null);
         ApiProxy.setDelegate(originalDelegate);
         if (!AppEngineUtil.isProduction()) {
